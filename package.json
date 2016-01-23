@@ -1,0 +1,16 @@
+{
+    "name" : "reddum",
+    "version" : "0.1.0",
+    "description" : "The best of Reddit",
+    "main" : "app.js",
+    "dependencies" : {
+        "rethinkdb" : "*"
+    },
+    "scripts" : {
+        "start" : "node app.js",
+        "test" : "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords" : [],
+    "author" : "",
+    "license" : "ISC"
+}
