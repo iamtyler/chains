@@ -1,7 +1,6 @@
 "use strict";
 
-var r = require("rethinkdb"),
-    route = require("./route");
+var route = require("../route");
 
 var router = new route.Router();
 
