@@ -1,13 +1,12 @@
 {
-    "name" : "reddum",
+    "name" : "hyper-chain",
     "version" : "0.1.0",
-    "description" : "The best of Reddit",
+    "description" : "A minimal framework for serving HTTP requests",
     "main" : "app.js",
     "dependencies" : {
-        "rethinkdb" : "*"
+        "merge" : "*"
     },
     "scripts" : {
-        "start" : "node app.js",
         "test" : "echo \"Error: no test specified\" && exit 1"
     },
     "keywords" : [],

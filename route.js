@@ -24,7 +24,8 @@ function Handler (method, path, chain, params) {
 
 //===========================================================================
 Handler.prototype.execute = function (req, res) {
-    var params = {}, il = this.params.length;
+    var params = {},
+        il = this.params.length;
     for (let i = 0; i < il; ++i) {
         params[this.params[i]] = this.args[i];
     }
@@ -33,6 +34,7 @@ Handler.prototype.execute = function (req, res) {
             req : req,
             res : res,
             params : params,
+            query : req.url.query || {},
         },
         chain = this.chain,
         next = function () {
@@ -122,18 +124,31 @@ Node.prototype.match = function (method, parts, args) {
 
 function Router () {
     this.root = new Node();
+    this.prefixes = [];
+    this.prefix = [];
+}
+
+//===========================================================================
+Router.prototype.prefix = function (prefix, callback) {
+    if (!prefix.startsWith("/")) {
+        prefix = "/" + prefix;
+    }
+    if (prefix.endsWith("/")) {
+        prefix = prefix.substring(0, prefix.length - 1);
+    }
+
+    this.prefixes.push(this.prefix);
+    Array.prototype.push.call(this.prefix, splitPath(prefix));
+    callback(this);
+    this.prefix = this.prefixes.pop();
 }
 
 //===========================================================================
 Router.prototype.add = function (method, path) {
-    var parts = splitPath(path);
-    if (parts === null) {
-        return false;
-    }
+    var parts = this.prefix.concat(splitPath(path)),
+        array = Array.prototype.slice.call(arguments, 2);
 
-    var chain = Array.prototype.slice.call(arguments, 2);
-
-    return this.root.register(method, path, parts, flattenChain(chain), []);
+    return this.root.register(method, path, parts, flattenArray(array), []);
 }
 
 //===========================================================================
@@ -182,10 +197,6 @@ function splitPath (path) {
     if (path.startsWith("/")) {
         path = path.substring(1);
     }
-    else {
-        return null;
-    }
-
     if (path.endsWith("/")) {
         path = path.substring(0, path.length - 1);
     }
@@ -194,22 +205,22 @@ function splitPath (path) {
 }
 
 //===========================================================================
-function flattenChain (chain) {
-    if (!(chain instanceof Array)) {
-        return [ chain ];
+function flattenArray (array) {
+    if (!(array instanceof Array)) {
+        return [ array ];
     }
 
-    var a = [];
-    for (let fn of chain) {
+    var result = [];
+    for (let fn of array) {
         if (fn instanceof Array) {
-            Array.prototype.push.apply(a, flattenChain(fn));
+            Array.prototype.push.apply(result, flattenArray(fn));
         }
         else {
-            a.push(fn);
+            result.push(fn);
         }
     }
 
-    return a;
+    return result;
 }
 
 
