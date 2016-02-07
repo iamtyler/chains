@@ -1,5 +1,5 @@
 {
-    "name" : "hyper-chain",
+    "name" : "chains",
     "version" : "0.1.0",
     "description" : "A minimal framework for serving HTTP requests",
     "main" : "app.js",
