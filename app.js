@@ -61,6 +61,13 @@ Request.prototype.readBody = function (callback) {
 
 //===========================================================================
 Request.prototype.parseForm = function (callback) {
+    // TODO: ensure compatible content type
+
+    this.readBody(() => {
+        // TODO: parse body as form
+
+        callback();
+    });
 }
 
 
@@ -95,7 +102,7 @@ Response.prototype.body = function (body) {
 //===========================================================================
 Response.prototype.type = function (type) {
     if (type === undefined) {
-        delete this.header["Content-Type"];
+        delete this.headers["Content-Type"];
     }
     else {
         this.headers["Content-Type"] = type;
@@ -147,6 +154,9 @@ function Application (opts) {
 
     if (opts.static !== false && opts.static instanceof String) {
         this.static = path.resolve(opts.static);
+    }
+    else {
+        this.static = false;
     }
     this.host = opts.host;
     this.port = opts.port;
